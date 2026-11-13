@@ -1,0 +1,111 @@
+<html
+  data-composition-variables='[
+    {"id":"speakerName","type":"string","label":"ชื่อผู้พูด","default":"ชื่อผู้พูด"},
+    {"id":"speakerRole","type":"string","label":"ตำแหน่ง","default":"ตำแหน่ง · บริษัท"}
+  ]'
+>
+  <template>
+    <style>
+      #root {
+        position: absolute;
+        inset: 0;
+        font-family: "Prompt", sans-serif;
+        color: #fff;
+      }
+      .chip {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 200px;
+        text-align: center;
+      }
+      .chip span {
+        display: inline-block;
+        padding: 18px 34px;
+        border-radius: 999px;
+        background: rgba(15, 16, 22, 0.8);
+        font-size: 46px;
+        font-weight: 800;
+      }
+      .chip em {
+        font-style: normal;
+        color: var(--accent, #ff5a36);
+        margin-right: 14px;
+      }
+      #gfx-code {
+        position: absolute;
+        left: 60px;
+        top: 1010px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        background: rgba(15, 16, 22, 0.8);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 30px;
+        color: #9fe3ff;
+      }
+      #gfx-card {
+        position: absolute;
+        left: 60px;
+        top: 1100px;
+        width: 860px;
+        height: 220px;
+        border-radius: 26px;
+        background: rgba(15, 16, 22, 0.84);
+        overflow: hidden;
+      }
+      #gfx-wipe {
+        position: absolute;
+        inset: 0;
+      }
+      #gfx-bar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 16px;
+        background: var(--accent, #ff5a36);
+      }
+      #gfx-name {
+        position: absolute;
+        left: 56px;
+        top: 34px;
+        font-size: 76px;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      #gfx-role {
+        position: absolute;
+        left: 58px;
+        top: 136px;
+        font-size: 40px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.78);
+      }
+    </style>
+    <div id="root" data-composition-id="graphics" data-width="1080" data-height="1920">
+      <div id="gfx-chip" class="chip clip" data-start="0" data-duration="3">
+        <span id="gfx-chip-in"><em>02</em>ใส่กราฟิก</span>
+      </div>
+      <div id="gfx-code" class="clip" data-start="0.3" data-duration="2.7">&lt;div class="lower-third"&gt;</div>
+      <div id="gfx-card" class="clip" data-start="0.3" data-duration="2.7">
+        <div id="gfx-wipe">
+          <div id="gfx-bar"></div>
+          <div id="gfx-name" data-var-text="speakerName">ชื่อผู้พูด</div>
+          <div id="gfx-role" data-var-text="speakerRole">ตำแหน่ง · บริษัท</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#gfx-chip-in", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.05);
+      // The code tag types the card into being: tag first, card wipes open from its bar.
+      tl.fromTo("#gfx-code", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, ease: "expo.out" }, 0.3);
+      tl.fromTo("#gfx-wipe", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "expo.out" }, 0.45);
+      tl.fromTo("#gfx-name", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power4.out" }, 0.62);
+      tl.fromTo("#gfx-role", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power4.out" }, 0.72);
+      // Exit together, quicker than the entrance.
+      tl.to(["#gfx-chip-in", "#gfx-code", "#gfx-wipe"], { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power3.in" }, 2.72);
+      window.__timelines["graphics"] = tl;
+    </script>
+  </template>
+</html>

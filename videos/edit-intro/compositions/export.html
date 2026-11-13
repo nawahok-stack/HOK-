@@ -1,0 +1,124 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      font-family: "Prompt", sans-serif;
+      color: #fff;
+    }
+    .chip {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 200px;
+      text-align: center;
+    }
+    .chip span {
+      display: inline-block;
+      padding: 18px 34px;
+      border-radius: 999px;
+      background: rgba(15, 16, 22, 0.8);
+      font-size: 46px;
+      font-weight: 800;
+    }
+    .chip em {
+      font-style: normal;
+      color: var(--accent, #ff5a36);
+      margin-right: 14px;
+    }
+    #exp-panel {
+      position: absolute;
+      left: 60px;
+      width: 960px;
+      top: 1070px;
+      height: 250px;
+      padding: 30px 36px;
+      border-radius: 28px;
+      background: rgba(15, 16, 22, 0.84);
+    }
+    #exp-cmd {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 34px;
+      color: #9fe3ff;
+    }
+    #exp-track {
+      position: relative;
+      margin-top: 30px;
+      height: 26px;
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.14);
+      overflow: hidden;
+    }
+    #exp-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      border-radius: 13px;
+      background: var(--accent, #ff5a36);
+      transform-origin: 0% 50%;
+    }
+    #exp-row {
+      position: relative;
+      margin-top: 24px;
+      height: 56px;
+      font-size: 40px;
+      font-weight: 500;
+    }
+    #exp-count {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 34px;
+      line-height: 56px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+    #exp-done {
+      position: absolute;
+      right: 0;
+      top: 0;
+      font-weight: 800;
+      color: #5be38a;
+    }
+  </style>
+  <div id="root" data-composition-id="export" data-width="1080" data-height="1920">
+    <div id="exp-chip" class="chip clip" data-start="0" data-duration="2.8">
+      <span id="exp-chip-in"><em>03</em>Render เป็น MP4</span>
+    </div>
+    <div id="exp-panel" class="clip" data-start="0" data-duration="2.8">
+      <div id="exp-cmd">$ npx hyperframes render</div>
+      <div id="exp-track"><div id="exp-fill"></div></div>
+      <div id="exp-row" data-layout-allow-overlap>
+        <div id="exp-count">frame 000 / 450</div>
+        <div id="exp-done">✓ video.mp4</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#exp-chip-in", { opacity: 0, y: -24, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.35, ease: "expo.out" }, 0);
+    tl.fromTo("#exp-panel", { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.45, ease: "expo.out" }, 0.1);
+    // Progress is constant speed on purpose: linear fill, frame counter driven by the same tween.
+    const counter = { f: 0 };
+    tl.fromTo("#exp-fill", { scaleX: 0 }, { scaleX: 1, duration: 1.9, ease: "none" }, 0.4);
+    tl.fromTo(
+      counter,
+      { f: 0 },
+      {
+        f: 450,
+        duration: 1.9,
+        ease: "none",
+        onUpdate: () => {
+          document.querySelector("#exp-count").textContent =
+            "frame " + String(Math.round(counter.f)).padStart(3, "0") + " / 450";
+        },
+      },
+      0.4,
+    );
+    tl.fromTo("#exp-done", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 2.28);
+    tl.to(["#exp-chip-in", "#exp-panel"], { opacity: 0, filter: "blur(8px)", duration: 0.18, ease: "power3.in" }, 2.6);
+    window.__timelines["export"] = tl;
+  </script>
+</template>
